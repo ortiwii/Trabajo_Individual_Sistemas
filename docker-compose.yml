@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  rethinkdb:
+    image: rethinkdb
+    ports:
+      - "8080:8080"
+      - "28015:28015"
+      - "29015:29015"
+  servidor_cliente:
+    image: aplicacion_cliente:v8
+    depends_on:
+      - rethinkdb
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

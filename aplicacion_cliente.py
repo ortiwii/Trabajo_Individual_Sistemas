@@ -4,6 +4,9 @@
 import getopt
 from rethinkdb import RethinkDB
 import sys
+import signal
+import time
+import readchar
 import json
 
 r = RethinkDB()
@@ -12,7 +15,7 @@ def abrirConexion() :
     global r
     global conn
     try:
-        conn = r.connect("trabajo_rethinkdb_1", 28015).repl()
+        conn = r.connect("servidor_rethinkdb", 28015).repl()
     except:
         print('No se ha podido abrir conexion con rethinkdb')
         sys.exit(2)
@@ -23,7 +26,7 @@ def cerrarConexión():
 def crearBaseDeDatos(nombre):
     global r
 
-    print('Se va a crear la base de datos con el nombre: '+nombre+'\n -------------')
+    print('Se va a crear la base de datos con el nombre: '+nombre+'\n-------------')
     abrirConexion()
     try:
         r.db_create(nombre).run()
@@ -39,7 +42,7 @@ def crearBaseDeDatos(nombre):
 def borrarBaseDeDatos(nombre):
     global r
 
-    print('Se va a borrar la base de datos con el nombre: '+nombre+'\n -------------')
+    print('Se va a borrar la base de datos con el nombre: '+nombre+'\n-------------')
     abrirConexion()
     try:
         r.db_drop(nombre).run()
@@ -64,7 +67,6 @@ def crearTabla(nombreTabla): # Opción -t
 
     except:
         print('ERROR: No se ha podido crear la tabla ' + nombreTabla + ' en la base de datos con el nombre: ' + nombreTabla + '\nPor favor, revise los parametros')
-        sys.exit(2)
 def test(nombreBD): # Opcion -e
     global r
     print('- Test de conexion: \n ---------')
@@ -79,7 +81,6 @@ def test(nombreBD): # Opcion -e
         for doc in r.db_list().run():
             print('- ' + str(doc))
 
-        sys.exit(2)
 
 
 
@@ -94,7 +95,6 @@ def test(nombreBD): # Opcion -e
         for doc in db.table_list().run():
             print('- '+str(doc))
         print(' ')
-        sys.exit(2)
 
 
 # def escribirTabla(nombreBD):
@@ -118,8 +118,18 @@ def test(nombreBD): # Opcion -e
 #     except:
 #         print('ERROR: No se ha podido insertar el documento, revise los parametros y el formato del documento a subir')
 
+def handler(signum, frame):
+    print('\nHas presionado Ctrl-c. Quieres salir de verdad? s/n')
+    res = readchar.readchar()
+    if res == 's':
+        print("")
+        exit(1)
+    else:
+        print('')
+
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, handler)
     print('\n\n')
     print('  ##############')
     print('  # RETHINKDB: #')

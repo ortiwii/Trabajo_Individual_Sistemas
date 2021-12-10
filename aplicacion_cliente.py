@@ -119,7 +119,7 @@ def test(nombreBD): # Opcion -e
 #         print('ERROR: No se ha podido insertar el documento, revise los parametros y el formato del documento a subir')
 
 def handler(signum, frame):
-    print('\nHas presionado Ctrl-c. Quieres salir de verdad? s/n')
+    print('Has presionado Ctrl-c. Quieres salir de verdad? s/n')
     res = readchar.readchar()
     if res == 's':
         print("")

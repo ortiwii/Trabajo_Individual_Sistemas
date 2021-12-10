@@ -7,6 +7,8 @@ services:
       - "8080:8080"
       - "28015:28015"
       - "29015:29015"
+    volumes:
+      - /var/opt/rethinkdb:/home/app_user
   servidor_cliente:
     build: .
     image: servidor_cliente
